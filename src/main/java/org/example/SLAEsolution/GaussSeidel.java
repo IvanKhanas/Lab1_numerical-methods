@@ -20,8 +20,7 @@ import java.util.List;
 
 public class GaussSeidel extends Jacobi{
 
-    public List<Double> NormsList = new ArrayList<>();
-    public List<Double> NumsOfIterations = new ArrayList<>();
+
 
     public List<Double> NormsAnswers [] = new List[3];
     public List<Double> IterationsAnswers[] =new List[3];
@@ -93,6 +92,8 @@ public class GaussSeidel extends Jacobi{
         System.out.println("Выбранные вектора: \t" + VectorList+ "\n\n");
 
         for (int j=0; j<Accurence.length;j++) {
+            List<Double> NormsList = new ArrayList<>();
+            List<Double> NumsOfIterations = new ArrayList<>();
 
             for (int i = 0; i < VectorList.size(); i++) {
                 RealVector x1 = Inv.operate(b).subtract((Inv.multiply(U)).operate(VectorList.get(i)));
