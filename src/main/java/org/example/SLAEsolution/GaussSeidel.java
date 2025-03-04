@@ -72,16 +72,7 @@ public class GaussSeidel extends Jacobi{
         RealMatrix Inv = new LUDecomposition(L.add(D)).getSolver().getInverse();
 
 
-        RealVector XAccurate  = new ArrayRealVector(new double[]{111.0/155, 119.0/155,173.0/310, 9.0/5});//Значения X точное
-        RealVector b = new ArrayRealVector(new double[] {18.0, 36.0, 26.0, 12.0});//Вектор значений после =
 
-        RealVector x0_1 = new ArrayRealVector(new double[] {0.0, 10.0, 3.0, 0.0});
-        RealVector x0_2 = new ArrayRealVector(new double[] {0.0, 8.0, 1.0, 4.0});
-        RealVector x0_3 = new ArrayRealVector(new double[] {1.0, 6.0, 7.0, 9.0}); //Выбранные вектора
-        RealVector x0_4 = new ArrayRealVector(new double[] {0.0, 2.0, 5.0, 11.0});
-        RealVector x0_5 = new ArrayRealVector(new double[] {1.0, 2.0, 5.0, 14.0});
-
-        List<RealVector> VectorList = new ArrayList<>();
         Collections.addAll(VectorList, x0_1, x0_2, x0_3,x0_4,x0_5);
 
         List<RealVector> Answers = new ArrayList<>();
