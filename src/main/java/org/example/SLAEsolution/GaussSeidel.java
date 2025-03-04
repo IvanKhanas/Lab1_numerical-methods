@@ -8,10 +8,12 @@ import org.apache.commons.math3.linear.RealVector;
 import org.jblas.ComplexDoubleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.Eigen;
-import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +28,7 @@ public class GaussSeidel extends Jacobi{
 
 
     @Override
-    public void convergence(){
+    public void convergence(){ //Проверка по критерию сходимости
         System.out.println("                    Решение методом Гаусса-Зейделя :\n");
         fillMatrix();
 
@@ -65,18 +67,18 @@ public class GaussSeidel extends Jacobi{
     }
 
     @Override
-    public void Iteration(){
+    public void Iteration(){ //Нахождение решений
         convergence();
 
         RealMatrix Inv = new LUDecomposition(L.add(D)).getSolver().getInverse();
 
 
-        RealVector XAccurate  = new ArrayRealVector(new double[]{111.0/155, 119.0/155,173.0/310, 9.0/5});
-        RealVector b = new ArrayRealVector(new double[] {18.0, 36.0, 26.0, 12.0});
+        RealVector XAccurate  = new ArrayRealVector(new double[]{111.0/155, 119.0/155,173.0/310, 9.0/5});//Значения X точное
+        RealVector b = new ArrayRealVector(new double[] {18.0, 36.0, 26.0, 12.0});//Вектор значений после =
 
         RealVector x0_1 = new ArrayRealVector(new double[] {0.0, 10.0, 3.0, 0.0});
         RealVector x0_2 = new ArrayRealVector(new double[] {0.0, 8.0, 1.0, 4.0});
-        RealVector x0_3 = new ArrayRealVector(new double[] {1.0, 6.0, 7.0, 9.0});
+        RealVector x0_3 = new ArrayRealVector(new double[] {1.0, 6.0, 7.0, 9.0}); //Выбранные вектора
         RealVector x0_4 = new ArrayRealVector(new double[] {0.0, 2.0, 5.0, 11.0});
         RealVector x0_5 = new ArrayRealVector(new double[] {1.0, 2.0, 5.0, 14.0});
 
@@ -128,6 +130,8 @@ public class GaussSeidel extends Jacobi{
             }
             IterationsAnswers[j] = new ArrayList<>(NumsOfIterations);
 
+            Collections.sort(NormsList);
+
             NormsAnswers[j] =(new ArrayList<>(NormsList));
             System.out.println("\n");
 
@@ -137,47 +141,52 @@ public class GaussSeidel extends Jacobi{
 
     }
     @Override
-    public void PrintGRaphs(){
+    public void PrintGRaphs(){ //Рисуем графики
+
+        JFrame frame = new JFrame("Graphs");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridLayout(1, 3));
 
 
 
 
         XYChart chart1 = new XYChart(600, 600 );
         chart1.setTitle("GaussSeidel E=0.01");
-        chart1.setXAxisTitle("Number of Iterations");
-        chart1.setYAxisTitle("||x_точн-x_0||");
+        chart1.setXAxisTitle("||x_точн-x_0||");
+        chart1.setYAxisTitle("Number of Iterations");
 
-        double XData [] = (IterationsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
+        double YData [] = (IterationsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
+        double XData [] = (NormsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        double YData [] = (NormsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
-
-        chart1.addSeries("Зависимость ||x_точн-x_0|| от числа итераций", XData, YData);
-        new SwingWrapper<XYChart>(chart1).displayChart();
+        chart1.addSeries("Зависимость числа итераций от ||x_точн-x_0||", XData, YData);
+        frame.add(new XChartPanel(chart1));
 
 
         XYChart chart2 = new XYChart(600, 600 );
         chart2.setTitle("GaussSeidel E=0.001");
-        chart2.setXAxisTitle("Number of Iterations");
-        chart2.setYAxisTitle("||x_точн-x_0||");
+        chart2.setXAxisTitle("||x_точн-x_0||");
+        chart2.setYAxisTitle("Number of Iterations");
 
-        double XData2 [] = (IterationsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
+        double YData2 [] = (IterationsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
+        double XData2 [] = (NormsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        double YData2 [] = (NormsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
-
-        chart2.addSeries("Зависимость ||x_точн-x_0|| от числа итераций", XData2, YData2);
-        new SwingWrapper<XYChart>(chart2).displayChart();
+        chart2.addSeries("Зависимость числа итераций от ||x_точн-x_0||", XData2, YData2);
+        frame.add(new XChartPanel<>(chart2));
 
         XYChart chart3 = new XYChart(600, 600 );
-        chart3.setTitle("GaussSeide E=0.0001");
-        chart3.setXAxisTitle("Number of Iterations");
-        chart3.setYAxisTitle("||x_точн-x_0||");
+        chart3.setTitle("GaussSeidel E=0.0001");
+        chart3.setXAxisTitle("||x_точн-x_0||");
+        chart3.setYAxisTitle("Number of Iterations");
 
-        double XData3 [] = (IterationsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
+        double YData3 [] = (IterationsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        double YData3 [] = (NormsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
+        double XData3 [] = (NormsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        chart3.addSeries("Зависимость ||x_точн-x_0|| от числа итераций", XData3, YData3);
-        new SwingWrapper<XYChart>(chart3).displayChart();
+        chart3.addSeries("Зависимость числа итераций от ||x_точн-x_0||", XData3, YData3);
+        frame.add(new XChartPanel<>(chart3));
+
+        frame.pack();
+        frame.setVisible(true);
 
 
     }

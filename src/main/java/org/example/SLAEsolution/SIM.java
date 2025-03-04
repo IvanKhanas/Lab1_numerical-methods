@@ -8,9 +8,11 @@ import org.example.MatrixData;
 import org.jblas.ComplexDoubleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.Eigen;
-import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +34,7 @@ public class SIM extends MatrixData {
 
 
 
-    public void convergence () {
+    public void convergence () { //Проверка критерия сходимости
 
         System.out.println("\n\n" + "                    Решение методом простой итерации: ");
 
@@ -50,7 +52,7 @@ public class SIM extends MatrixData {
 
             double norm = sqrt(max(lambdasModules));
 
-            if (norm<1.00) { Tao = t;
+          if (norm<1.00) { Tao = t;
                 System.out.println("True! " + "Значение параметра тао : "+ t + "\n");
                 System.out.println("Значение выражения ||E-Tao*A|| : "+norm); break;}
 
@@ -59,15 +61,16 @@ public class SIM extends MatrixData {
 
     }
 
-    public void Iteration(){
+    public void Iteration(){ //Нахождение решений
         convergence();
 
-        RealVector XAccurate  = new ArrayRealVector(new double[]{111.0/155, 119.0/155,173.0/310, 9.0/5});
-        RealVector b = new ArrayRealVector(new double[] {18.0, 36.0, 26.0, 12.0});
+        RealVector XAccurate  = new ArrayRealVector(new double[]{111.0/155, 119.0/155,173.0/310, 9.0/5}); //Значения X точное
+
+        RealVector b = new ArrayRealVector(new double[] {18.0, 36.0, 26.0, 12.0}); //Вектор значений после =
 
         RealVector x0_1 = new ArrayRealVector(new double[] {0.0, 1.0, 0.0, 0.0});
         RealVector x0_2 = new ArrayRealVector(new double[] {0.0, 1.0, 0.0, 1.0});
-        RealVector x0_3 = new ArrayRealVector(new double[] {0.0, 1.0, 1.0, 0.0});
+        RealVector x0_3 = new ArrayRealVector(new double[] {0.0, 1.0, 1.0, 0.0}); //Выбранные вектора
         RealVector x0_4 = new ArrayRealVector(new double[] {0.0, 2.0, 5.0, 11.0});
         RealVector x0_5 = new ArrayRealVector(new double[] {1.0, 2.0, 5.0, 14.0});
 
@@ -126,20 +129,21 @@ public class SIM extends MatrixData {
             Answers.clear();
 
         }
+            Collections.sort(NormsList);
+
             IterationsAnswers[j] = new ArrayList<>(NumsOfIterations);
 
             NormsAnswers[j] =(new ArrayList<>(NormsList));
 
-
-
-
-
-
     }
 
     }
 
-    public void PrintGRaphs(){
+    public void PrintGRaphs(){ //Рисуем графики
+
+        JFrame frame = new JFrame("Graphs");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridLayout(1, 3));
 
 
 
@@ -149,12 +153,12 @@ public class SIM extends MatrixData {
         chart1.setXAxisTitle("Number of Iterations");
         chart1.setYAxisTitle("||x_точн-x_0||");
 
-        double XData [] = (IterationsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
+        double  YData [] = (IterationsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        double YData [] = (NormsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
+        double XData [] = (NormsAnswers[0]).stream().mapToDouble(Double::doubleValue).toArray();
 
         chart1.addSeries("Зависимость ||x_точн-x_0|| от числа итераций", XData, YData);
-        new SwingWrapper<XYChart>(chart1).displayChart();
+        frame.add(new XChartPanel(chart1));
 
 
         XYChart chart2 = new XYChart(600, 600 );
@@ -162,24 +166,27 @@ public class SIM extends MatrixData {
         chart2.setXAxisTitle("Number of Iterations");
         chart2.setYAxisTitle("||x_точн-x_0||");
 
-        double XData2 [] = (IterationsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
+        double YData2 [] = (IterationsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        double YData2 [] = (NormsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
+        double XData2 [] = (NormsAnswers[1]).stream().mapToDouble(Double::doubleValue).toArray();
 
         chart2.addSeries("Зависимость ||x_точн-x_0|| от числа итераций", XData2, YData2);
-        new SwingWrapper<XYChart>(chart2).displayChart();
+        frame.add(new XChartPanel<>(chart2));
 
         XYChart chart3 = new XYChart(600, 600 );
         chart3.setTitle("SIM E=0.0001");
         chart3.setXAxisTitle("Number of Iterations");
         chart3.setYAxisTitle("||x_точн-x_0||");
 
-        double XData3 [] = (IterationsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
+        double YData3 [] = (IterationsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
 
-        double YData3 [] = (NormsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
+        double XData3 [] = (NormsAnswers[2]).stream().mapToDouble(Double::doubleValue).toArray();
 
         chart3.addSeries("Зависимость ||x_точн-x_0|| от числа итераций", XData3, YData3);
-        new SwingWrapper<XYChart>(chart3).displayChart();
+        frame.add(new XChartPanel<>(chart3));
+
+        frame.pack();
+        frame.setVisible(true);
 
 
     }

@@ -7,8 +7,13 @@ import org.jblas.ComplexDoubleMatrix;
 import org.jblas.DoubleMatrix;
 import org.jblas.Eigen;
 
+import javax.swing.*;
+
 public abstract class MatrixData {
-    public RealMatrix A = new Array2DRowRealMatrix(new double[][]{{12,7,4,1}, {5,20,8,7}, {1,4,14,8}, {0,1,4,5}}, false);
+
+
+
+    public RealMatrix A = new Array2DRowRealMatrix(new double[][]{{12,7,4,1}, {5,20,8,7}, {1,4,14,8}, {0,1,4,5}}, false); //Матрица A
 
     public double[] Accurence = {0.01, 0.001, 0.0001};
 
@@ -41,6 +46,9 @@ public abstract class MatrixData {
 
         return eigenvalueModules; // возвращаем массив модулей
     }
+    JFrame frame = new JFrame("Graphs");
+
+
 
 
 }
